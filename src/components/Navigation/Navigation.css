@@ -1,0 +1,99 @@
+.popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    z-index: 10;
+    display: flex;
+    justify-content: flex-end;
+    visibility: hidden;
+    opacity: 0;
+    transition: visibility 0.3s, opacity 0.3s linear;
+    background-color: rgba(0, 0, 0, 0.3);
+}
+
+.popup_opened {
+    visibility: visible;
+    opacity: 1;
+}
+
+.navigation {
+    padding-top: 144px;
+    padding-bottom: 46px;
+    background-color: #ffffff;
+    min-width: 320px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    font-family: 'Inter', Arial, Helvetica, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%;
+    -moz-text-size-adjust: 100%;
+}
+
+.navigation__close-button {
+    padding: 0;
+    background: transparent;
+    background-image: url('../../images/close-button.svg');
+    width: 18px;
+    height: 18px;
+    background-size: cover;
+    background-position: center;
+    position: absolute;
+    top: 20.16px;
+    right: 20.16px;
+    border: none;
+}
+
+.navigation__list {
+    padding: 0;
+    margin: 0;
+    list-style-type: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.navigation__list-item {
+    margin-bottom: 15px;
+    padding-bottom: 7px;
+}
+
+.navigation__list-item:last-child {
+    margin-bottom: 0;
+}
+
+.navigation__list-item_active {
+    border-bottom: 1px solid rgba(0, 0, 0, 1);
+}
+
+.navigation__link {
+    color: #000000;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 22px;
+    text-decoration: none;
+}
+
+@media (min-width: 768px) {
+    .navigation {
+        padding-top: 159px;
+        padding-bottom: 90px;
+        min-width: 520px;
+    }
+
+    .navigation__list-item {
+        margin-bottom: 22px;
+        padding-bottom: 4px;
+    }
+
+    .navigation__close-button {
+        top: 29.16px;
+        right: 29.16px;
+    }
+}
