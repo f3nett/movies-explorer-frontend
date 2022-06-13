@@ -27,6 +27,7 @@ function SearchForm() {
                         type='text'
                         name='film'
                         placeholder='Фильм'
+                        required
                         value={seachedFilm}
                         onChange={handleChange}
                     />

@@ -8,17 +8,17 @@ function Footer() {
                 <nav>
                     <ul className='footer__navigation'>
                         <li className='footer__navigation-item'>
-                            <a className='footer__navigation-link button' href='https://practicum.yandex.ru/'>
+                            <a className='footer__navigation-link button' href='https://practicum.yandex.ru/' target='_blank' rel='noreferrer'>
                                 Яндекс.Практикум
                             </a>
                         </li>
                         <li className='footer__navigation-item'>
-                            <a className='footer__navigation-link button' href='https://github.com/'>
+                            <a className='footer__navigation-link button' href='https://github.com/' target='_blank' rel='noreferrer'>
                                 Github
                             </a>
                         </li>
                         <li className='footer__navigation-item'>
-                            <a className='footer__navigation-link button' href='https://www.facebook.com'>
+                            <a className='footer__navigation-link button' href='https://www.facebook.com' target='_blank' rel='noreferrer'>
                                 Facebook
                             </a>
                         </li>
