@@ -1,0 +1,202 @@
+.student {
+    padding-left: 14px;
+    padding-right: 14px;
+    font-family: 'Inter', Arial, Helvetica, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%;
+    -moz-text-size-adjust: 100%;
+}
+
+.student__title {
+    margin: 0;
+    padding-top: 70px;
+    padding-bottom: 28px;
+    color: black;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 22px;
+    letter-spacing: -0.04em;
+    border-bottom: 1px solid rgba(0, 0, 0, 1);
+}
+
+.student__info {
+    padding-top: 60px;
+    padding-bottom: 69px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.student__photo {
+    width: 292px;
+    height: 352px;
+    background-size: cover;
+    background-position: center;
+    border-radius: 10px;
+}
+
+.student__about {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: space-between;
+    min-height: 302px;
+    max-width: 460px;
+}
+
+.student__name {
+    margin: 40px 0 0 0;
+    color: black;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 30px;
+    line-height: 36px;
+    letter-spacing: -0.04em;
+}
+
+.student__specialization {
+    margin: 20px 0 0 0;
+    color: black;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 11px;
+    line-height: 16px;
+}
+
+.student__description {
+    margin: 20px 0 0 0;
+    color: black;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 11px;
+    line-height: 16px;
+}
+
+.student__links {
+    padding: 0;
+    margin: 40px 0 0 0;
+    list-style-type: none;
+    display: flex;
+    flex-direction: row;
+}
+
+.student__link {
+    margin-right: 26px;
+}
+
+.student__link:last-child {
+    margin-right: 0;
+}
+
+.student__link-text {
+    color: black;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 17px;
+    text-decoration: none;
+}
+
+@media (min-width: 768px) {
+    .student {
+        padding-left: 50px;
+        padding-right: 50px;
+    }
+
+    .student__title {
+        padding-top: 90px;
+        padding-bottom: 23px;
+        font-size: 22px;
+        line-height: 27px;
+        letter-spacing: -0.04em;
+    }
+
+    .student__info {
+        padding-top: 66px;
+        padding-bottom: 90px;
+        flex-direction: row-reverse;
+        align-items: flex-start;
+        justify-content: space-between;
+    }
+
+    .student__photo {
+        width: 255px;
+        height: 307px;
+    }
+
+    .student__about {
+        max-width: 364px;
+        min-height: 307px;
+    }
+
+    .student__name {
+        margin-top: 0;
+        font-size: 40px;
+        line-height: 40px;
+        letter-spacing: -0.04em;
+    }
+
+    .student__specialization {
+        margin-top: 16px;
+        font-size: 12px;
+        line-height: 18px;
+    }
+
+    .student__description {
+        font-size: 12px;
+        line-height: 18px;
+    }
+
+    .student__links {
+        margin-top: 20px;
+    }
+
+    .student__link {
+        margin-right: 20px;
+    }
+}
+
+@media (min-width: 1280px) {
+    .student {
+        padding-left: 70px;
+        padding-right: 70px;
+    }
+
+    .student__title {
+        padding-top: 110px;
+    }
+
+    .student__info {
+        padding-bottom: 100px;
+    }
+
+    .student__photo {
+        width: 270px;
+        height: 327px;
+    }
+
+    .student__about {
+        max-width: 600px;
+        min-height: 327px;
+    }
+
+    .student__name {
+        font-size: 50px;
+        line-height: 58px;
+    }
+
+    .student__specialization {
+        margin-top: 18px;
+        font-size: 18px;
+        line-height: 20px;
+    }
+
+    .student__description {
+        margin-top: 26px;
+        font-size: 14px;
+        line-height: 22px;
+    }
+}

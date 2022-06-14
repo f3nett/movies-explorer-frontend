@@ -1,0 +1,120 @@
+.footer {
+    flex: 0 0 auto;
+    padding-left: 10px;
+    padding-right: 10px;
+    font-family: 'Inter', Arial, Helvetica, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%;
+    -moz-text-size-adjust: 100%;
+}
+
+.footer__title {
+    margin: 0;
+    padding-top: 79px;
+    padding-bottom: 20px;
+    text-align: center;
+    color: #a0a0a0;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 14.5px;
+    border-bottom: 1px solid rgba(232, 232, 232, 1);
+}
+
+.footer__body {
+    display: flex;
+    flex-direction: column;
+    padding-top: 30px;
+    padding-bottom: 10px;
+}
+
+.footer__navigation {
+    margin: 0;
+    padding: 0 0 30px 0;
+    list-style-type: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.footer__navigation-item {
+    margin-bottom: 12px;
+}
+
+.footer__navigation-item:last-child {
+    margin-bottom: 0;
+}
+
+.footer__navigation-link {
+    text-decoration: none;
+    color: #000000;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 15px;
+}
+
+.footer__subtitle {
+    margin: 0;
+    text-align: center;
+    color: #a0a0a0;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 15px;
+}
+
+@media (min-width: 768px) {
+    .footer {
+        padding-left: 30px;
+        padding-right: 30px;
+    }
+
+    .footer__title {
+        font-size: 13px;
+        line-height: 16px;
+    }
+
+    .footer__body {
+        flex-direction: row-reverse;
+        justify-content: space-between;
+        align-items: baseline;
+        padding-top: 20px;
+        padding-bottom: 20px;
+    }
+
+    .footer__navigation {
+        padding: 0;
+        flex-direction: row;
+        align-items: center;
+    }
+
+    .footer__navigation-item {
+        margin-bottom: 0;
+        margin-right: 20px;
+    }
+
+    .footer__navigation-item:last-child {
+        margin-right: 0;
+    }
+
+    .footer__navigation-link {
+        font-size: 13px;
+        line-height: 16px;
+    }
+
+    .footer__subtitle {
+        color: #000000;
+        font-size: 13px;
+        line-height: 16px;
+    }
+}
+
+@media (min-width: 1280px) {
+    .footer {
+        padding-left: 70px;
+        padding-right: 70px;
+    }
+}
