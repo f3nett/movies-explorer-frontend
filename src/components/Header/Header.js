@@ -1,17 +1,19 @@
 import React from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
+import useWindowSize from '../../hooks/useWindowSize';
 import Logo from '../Logo/Logo';
 import Account from '../Account/Account';
 
 function Header({ loggedIn, onOpenNavigation }) {
+    const { windowSize } = useWindowSize();
     const location = useLocation();
     const [currentPath, setCurrentPath] = React.useState(location.pathname);
     const [isMobile, setIsMobile] = React.useState(false);
 
     React.useEffect(() => {
-        if (window.innerWidth <= 768) setIsMobile(true);
+        if (windowSize.width < 1280) setIsMobile(true);
         else setIsMobile(false);
-    }, []);
+    }, [windowSize.width]);
 
     React.useEffect(() => {
         setCurrentPath(location.pathname);

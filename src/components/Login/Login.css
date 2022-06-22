@@ -74,6 +74,7 @@
     font-size: 10px;
     line-height: 12px;
     visibility: hidden;
+    max-width: 260px;
 }
 
 .signin__error_active {
@@ -84,10 +85,11 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding-top: 157px;
+    padding-top: 123px;
 }
 
 .signin__submit {
+    margin-top: 10px;
     background: #000000;
     border-radius: 3px;
     min-width: 260px;
@@ -136,8 +138,12 @@
         min-width: 396px;
     }
 
+    .signin__error {
+        max-width: 396px;
+    }
+
     .signin__bottom {
-        padding-top: 69px;
+        padding-top: 35px;
     }
 
     .signin__submit {

@@ -11,7 +11,7 @@ function Navigation({ isOpen, onClose }) {
     }, [location.pathname]);
 
     return (
-        <div className={`popup ${isOpen ? 'popup_opened' : ''}`}>
+        <div className={`popup popup_type_navigation ${isOpen ? 'popup_opened' : ''}`}>
             <div className='navigation'>
                 <button className='navigation__close-button button' type='button' aria-label='Закрыть' onClick={onClose}></button>
                 <nav>

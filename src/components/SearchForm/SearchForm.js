@@ -1,46 +1,64 @@
 import React from 'react';
 
-function SearchForm() {
-    const [seachedFilm, setSeachedFilm] = React.useState('');
-    const [isShortFilmFilter, setIsShortFilmFilter] = React.useState(true);
+function SearchForm({ onFindMovie, onOpenTooltip, isBlockSearch }) {
+    const [searchText, setSearchText] = React.useState({ movie: localStorage.getItem('searchText') || '' });
+    const [isShortFilmFilter, setIsShortFilmFilter] = React.useState(localStorage.getItem('searchSlider') === 'false' ? false : true);
+    const { movie } = searchText;
 
     function handleChange(e) {
-        const { value } = e.target;
-        setSeachedFilm(value);
+        const { name, value } = e.target;
+        setSearchText({ ...searchText, [name]: value });
+    }
+
+    function handleSubmit(e) {
+        e.preventDefault();
+        localStorage.setItem('searchText', movie);
+        localStorage.setItem('searchSlider', isShortFilmFilter);
+        if (movie === '') {
+            onOpenTooltip();
+        } else {
+            onFindMovie(movie, isShortFilmFilter);
+        }
     }
 
     function toggleSwitch() {
         if (isShortFilmFilter) {
+            console.log('вкл');
             setIsShortFilmFilter(false);
+            onFindMovie(movie, false);
         } else {
+            console.log('выкл');
             setIsShortFilmFilter(true);
+            onFindMovie(movie, true);
         }
     }
 
     return (
         <section className='searchform'>
             <form className='searchform__content'>
-                <div className='seachform__input'>
+                <div className='searchform__input'>
                     <input
-                        className='seachform__input-box'
-                        id='input_seach'
+                        className='searchform__input-box'
+                        id='input_search'
                         type='text'
-                        name='film'
+                        name='movie'
                         placeholder='Фильм'
                         required
-                        value={seachedFilm}
+                        value={movie}
                         onChange={handleChange}
+                        readOnly={isBlockSearch}
                     />
-                    <button className='seachform__submit-button button' type='submit'>
+                    <button className='searchform__submit-button button' type='submit' disabled={isBlockSearch} onClick={handleSubmit}>
                         Найти
                     </button>
                 </div>
-                <div className='seachform__slider'>
+                <div className='searchform__slider'>
                     <button
-                        className={`seachform__switch ${isShortFilmFilter ? 'seachform__switch_active' : ''}`}
+                        className={`searchform__switch ${isShortFilmFilter ? 'searchform__switch_active' : ''}`}
                         type='button'
+                        disabled={isBlockSearch}
                         onClick={toggleSwitch}></button>
-                    <p className='seachform__slider-text'>Короткометражки</p>
+                    <p className='searchform__slider-text'>Короткометражки</p>
                 </div>
             </form>
         </section>
