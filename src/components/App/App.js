@@ -1,6 +1,7 @@
 import React from 'react';
 import { Route, Routes, Navigate, useNavigate } from 'react-router-dom';
 import ProtectedRoute from '../ProtectedRoute/ProtectedRoute';
+import AuthRoute from '../AuthRoute/AuthRoute';
 import Main from '../Main/Main';
 import Movies from '../Movies/Movies';
 import SavedMovies from '../SavedMovies/SavedMovies';
@@ -20,6 +21,7 @@ import { filterMovies, filterMoviesByDuration } from '../../utils/filterMovies';
 
 function App() {
     const [loggedIn, setLoggedIn] = React.useState(false);
+    const [isLoading, setIsLoading] = React.useState(true);
     const [cards, setCards] = React.useState([]);
     const [allSavedCards, setAllSavedCards] = React.useState([]);
     const [savedCards, setSavedCards] = React.useState([]);
@@ -33,6 +35,10 @@ function App() {
     const [isFilterNotFound, setIsFilterNotFound] = React.useState(false);
     const [isFilterError, setIsFilterError] = React.useState(false);
     let navigate = useNavigate();
+
+    React.useEffect(() => {
+        tokenCheck();
+    }, []);
 
     React.useEffect(() => {
         tokenCheck();
@@ -54,12 +60,18 @@ function App() {
     function tokenCheck() {
         let jwt = localStorage.getItem('jwt');
         if (jwt) {
-            auth.getContent(jwt).then((res) => {
-                if (res) {
-                    setLoggedIn(true);
-                }
-            });
-        }
+            auth.getContent(jwt)
+                .then((res) => {
+                    if (res) {
+                        setLoggedIn(true);
+                    }
+                })
+                .catch((err) => {
+                    setLoggedIn(false);
+                    localStorage.removeItem('jwt');
+                })
+                .finally(() => setIsLoading(false));
+        } else setIsLoading(false);
     }
 
     function handleRegister(name, email, password) {
@@ -213,11 +225,13 @@ function App() {
             <div className='page'>
                 <div className='page__content'>
                     <Routes>
-                        <Route path='/signin' element={<Login onLogin={handleLogin} serverError={loginError} />} />
-                        <Route path='/signup' element={<Register onRegister={handleRegister} serverError={registrationError} />} />
+                        <Route element={<AuthRoute loggedIn={loggedIn} />}>
+                            <Route path='/signin' element={<Login onLogin={handleLogin} serverError={loginError} />} />
+                            <Route path='/signup' element={<Register onRegister={handleRegister} serverError={registrationError} />} />
+                        </Route>
                         <Route path='/404' element={<NotFound />} />
                         <Route element={<HeaderLayout loggedIn={loggedIn} onOpenNavigation={handleOpenNavigationClick} />}>
-                            <Route element={<ProtectedRoute loggedIn={loggedIn} />}>
+                            <Route element={<ProtectedRoute loggedIn={loggedIn} isLoading={isLoading} />}>
                                 <Route
                                     path='/profile'
                                     element={<Profile onUpdateUser={handleUpdateUser} serverError={userUpdateError} onSignOut={signOut} />}
@@ -225,7 +239,7 @@ function App() {
                             </Route>
                             <Route element={<FooterLayout />}>
                                 <Route path='/' element={<Main />} />
-                                <Route element={<ProtectedRoute loggedIn={loggedIn} />}>
+                                <Route element={<ProtectedRoute loggedIn={loggedIn} isLoading={isLoading} />}>
                                     <Route
                                         path='/movies'
                                         element={
