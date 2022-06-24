@@ -53,8 +53,6 @@ function App() {
         setSavedMovieSearchText(localStorage.getItem('savedMovieSearchText') || '');
         setIsMovieSearchSlider(localStorage.getItem('isMovieSearchSlider') === 'true' ? true : false);
         setIsSavedMovieSearchSlider(localStorage.getItem('isSavedMovieSearchSlider') === 'true' ? true : false);
-
-        console.log(localStorage);
     }, []);
 
     React.useEffect(() => {
@@ -66,7 +64,7 @@ function App() {
                     setCurrentUser(userData);
                     setAllCards(moviesData || []);
                     setAllSavedCards(savedMoviesData || []);
-                    localStorage.setItem('savedMovies', JSON.stringify(savedMoviesData) || []);
+                    setSavedCards(JSON.parse(localStorage.getItem('savedMovies')) || savedMoviesData || []);
                 })
                 .catch((err) => {
                     console.log(err);
