@@ -13,6 +13,10 @@ function Profile({ onUpdateUser, serverError, onSignOut }) {
                 pattern: /^([a-zа-яё ]+)$/i,
                 errorMessage: 'Поле может содержать только буквы, дефис и пробел',
             },
+            email: {
+                pattern: /^[a-z0-9_.+-]+@[a-z0-9-]+\.[a-z0-9-.]+$/i,
+                errorMessage: 'Введите адрес электронной почты',
+            }
         },
     });
 
@@ -21,11 +25,12 @@ function Profile({ onUpdateUser, serverError, onSignOut }) {
         if (isValid & ((currentUser.name === values['name']) & (currentUser.email === values['email']))) {
             setIsValid(false);
         }
-    }, [values]);
+    }, [values, isValid]);
 
     function handleSubmit(e) {
         e.preventDefault();
         onUpdateUser({ email: values['email'], name: values['name'] });
+        setIsValid(false);
     }
 
     return (

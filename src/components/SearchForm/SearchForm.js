@@ -1,36 +1,25 @@
 import React from 'react';
 
-function SearchForm({ onFindMovie, onOpenTooltip, isBlockSearch }) {
-    const [searchText, setSearchText] = React.useState({ movie: localStorage.getItem('searchText') || '' });
-    const [isShortFilmFilter, setIsShortFilmFilter] = React.useState(localStorage.getItem('searchSlider') === 'false' ? false : true);
-    const { movie } = searchText;
+function SearchForm({ onFindMovie, onOpenTooltip, isLockForm, searchText, isSearchSlider }) {
+    const [isCheckedSlider, setIsCheckedSlider] = React.useState(isSearchSlider);
+    const [searchedMovie, setSearchedMovie] = React.useState(searchText);
 
-    function handleChange(e) {
-        const { name, value } = e.target;
-        setSearchText({ ...searchText, [name]: value });
-    }
+    const handleSearchTextChange = (e) => {
+        const { value } = e.target;
+        setSearchedMovie(value);
+    };
 
     function handleSubmit(e) {
         e.preventDefault();
-        localStorage.setItem('searchText', movie);
-        localStorage.setItem('searchSlider', isShortFilmFilter);
-        if (movie === '') {
+        if (searchedMovie === '') {
             onOpenTooltip();
         } else {
-            onFindMovie(movie, isShortFilmFilter);
+            onFindMovie(searchedMovie, isCheckedSlider);
         }
     }
 
     function toggleSwitch() {
-        if (isShortFilmFilter) {
-            console.log('вкл');
-            setIsShortFilmFilter(false);
-            onFindMovie(movie, false);
-        } else {
-            console.log('выкл');
-            setIsShortFilmFilter(true);
-            onFindMovie(movie, true);
-        }
+        onFindMovie(searchedMovie, !isCheckedSlider);
     }
 
     return (
@@ -41,25 +30,28 @@ function SearchForm({ onFindMovie, onOpenTooltip, isBlockSearch }) {
                         className='searchform__input-box'
                         id='input_search'
                         type='text'
-                        name='movie'
+                        name='searchText'
                         placeholder='Фильм'
                         required
-                        value={movie}
-                        onChange={handleChange}
-                        readOnly={isBlockSearch}
+                        value={searchedMovie}
+                        onChange={handleSearchTextChange}
+                        readOnly={isLockForm}
                     />
-                    <button className='searchform__submit-button button' type='submit' disabled={isBlockSearch} onClick={handleSubmit}>
+                    <button className='searchform__submit-button button' type='submit' disabled={isLockForm} onClick={handleSubmit}>
                         Найти
                     </button>
                 </div>
-                <div className='searchform__slider'>
-                    <button
-                        className={`searchform__switch ${isShortFilmFilter ? 'searchform__switch_active' : ''}`}
-                        type='button'
-                        disabled={isBlockSearch}
-                        onClick={toggleSwitch}></button>
+                <label className='searchform__slider'>
+                    <input
+                        className='searchform__slider-input'
+                        type='checkbox'
+                        name='isSearchSlider'
+                        disabled={isLockForm}
+                        onChange={() => setIsCheckedSlider(!isCheckedSlider)}
+                        onClick={toggleSwitch}></input>
+                    <span className={`searchform__switch ${isCheckedSlider ? 'searchform__switch_active' : ''}`}></span>
                     <p className='searchform__slider-text'>Короткометражки</p>
-                </div>
+                </label>
             </form>
         </section>
     );

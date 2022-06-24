@@ -12,6 +12,10 @@ function Register({ onRegister, serverError }) {
                 pattern: /^([a-zа-яё ]+)$/i,
                 errorMessage: 'Поле может содержать только буквы, дефис и пробел',
             },
+            email: {
+                pattern: /^[a-z0-9_.+-]+@[a-z0-9-]+\.[a-z0-9-.]+$/i,
+                errorMessage: 'Введите адрес электронной почты',
+            },
         },
     });
 

@@ -67,6 +67,10 @@
     align-items: center;
 }
 
+.searchform__slider-input {
+    display: none;
+}
+
 .searchform__switch {
     display: inline-block;
     width: 36px;

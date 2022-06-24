@@ -3,13 +3,19 @@ import SearchForm from '../SearchForm/SearchForm';
 import MoviesCardList from '../MoviesCardList/MoviesCardList';
 import Preloader from '../Preloader/Preloader';
 
-function SavedMovies({ cards, onDeleteMovie, onFindMovie, onOpenTooltip, isPreloader, isFilterError, isFilterNotFound}) {
+function SavedMovies({ cards, onDeleteMovie, onFindMovie, onOpenTooltip, isPreloader, isFilterError, isFilterNotFound, searchText, isSearchSlider }) {
     const isSavedCardStyle = true;
     const [moviesListLength, setMoviesListLength] = React.useState(cards.length);
 
     return (
         <main className='movies'>
-            <SearchForm onFindMovie={onFindMovie} onOpenTooltip={onOpenTooltip} isBlockSearch={isPreloader}/>
+            <SearchForm
+                onFindMovie={onFindMovie}
+                onOpenTooltip={onOpenTooltip}
+                isLockForm={isPreloader}
+                searchText={searchText}
+                isSearchSlider={isSearchSlider}
+            />
             {isPreloader ? (
                 <Preloader />
             ) : isFilterNotFound ? (

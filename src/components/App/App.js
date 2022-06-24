@@ -17,11 +17,13 @@ import { CurrentUserContext } from '../../contexts/CurrentUserContext';
 import * as auth from '../../utils/auth';
 import mainApi from '../../utils/mainApi';
 import moviesApi from '../../utils/moviesApi';
-import { filterMovies, filterMoviesByDuration } from '../../utils/filterMovies';
+import { filterMovies } from '../../utils/filterMovies';
+import { NOT_FOUND_FILM_TOOLTIP_TEXT, UPDATE_USER_TOOLTIP_TEXT } from '../../utils/constants';
 
 function App() {
     const [loggedIn, setLoggedIn] = React.useState(false);
     const [isLoading, setIsLoading] = React.useState(true);
+    const [allCards, setAllCards] = React.useState([]);
     const [cards, setCards] = React.useState([]);
     const [allSavedCards, setAllSavedCards] = React.useState([]);
     const [savedCards, setSavedCards] = React.useState([]);
@@ -31,27 +33,44 @@ function App() {
     const [userUpdateError, setUserUpdateError] = React.useState('');
     const [isNavigationMenuOpen, setIsNavigationMenuOpen] = React.useState(false);
     const [isInfoTooltipOpen, setIsInfoTooltipOpen] = React.useState(false);
+    const [tooltipInfoText, setTooltipInfoText] = React.useState('');
     const [isPreloader, setIsPreloader] = React.useState(false);
-    const [isFilterNotFound, setIsFilterNotFound] = React.useState(false);
+    const [isMoviesNotFound, setIsMoviesNotFound] = React.useState(false);
+    const [isSavedMoviesNotFound, setIsSavedMoviesNotFound] = React.useState(false);
     const [isFilterError, setIsFilterError] = React.useState(false);
+    const [movieSearchText, setMovieSearchText] = React.useState('');
+    const [savedMovieSearchText, setSavedMovieSearchText] = React.useState('');
+    const [isMovieSearchSlider, setIsMovieSearchSlider] = React.useState(false);
+    const [isSavedMovieSearchSlider, setIsSavedMovieSearchSlider] = React.useState(false);
+
     let navigate = useNavigate();
 
     React.useEffect(() => {
         tokenCheck();
+        setCards(JSON.parse(localStorage.getItem('movies')) || []);
+        setSavedCards(JSON.parse(localStorage.getItem('savedMovies')) || []);
+        setMovieSearchText(localStorage.getItem('movieSearchText') || '');
+        setSavedMovieSearchText(localStorage.getItem('savedMovieSearchText') || '');
+        setIsMovieSearchSlider(localStorage.getItem('isMovieSearchSlider') === 'true' ? true : false);
+        setIsSavedMovieSearchSlider(localStorage.getItem('isSavedMovieSearchSlider') === 'true' ? true : false);
+
+        console.log(localStorage);
     }, []);
 
     React.useEffect(() => {
         tokenCheck();
         if (loggedIn) {
-            Promise.all([mainApi.getUser(), mainApi.getMovies()])
-                .then(([userData, savedMoviesData]) => {
+            Promise.all([mainApi.getUser(), moviesApi.getMovies(), mainApi.getMovies()])
+                .then(([userData, moviesData, savedMoviesData]) => {
+                    setIsFilterError(false);
                     setCurrentUser(userData);
-                    setAllSavedCards(savedMoviesData);
-                    setSavedCards(savedMoviesData);
-                    setCards(JSON.parse(localStorage.getItem('movies')) || []);
+                    setAllCards(moviesData || []);
+                    setAllSavedCards(savedMoviesData || []);
+                    localStorage.setItem('savedMovies', JSON.stringify(savedMoviesData) || []);
                 })
                 .catch((err) => {
                     console.log(err);
+                    setIsFilterError(true);
                 });
         }
     }, [loggedIn]);
@@ -111,10 +130,19 @@ function App() {
     function signOut() {
         localStorage.removeItem('jwt');
         localStorage.removeItem('movies');
-        localStorage.removeItem('searchText');
-        localStorage.removeItem('searchSlider');
+        localStorage.removeItem('savedMovies');
+        localStorage.removeItem('movieSearchText');
+        localStorage.removeItem('savedMovieSearchText');
+        localStorage.removeItem('isMovieSearchSlider');
+        localStorage.removeItem('isSavedMovieSearchSlider');
         setLoggedIn(false);
         setCurrentUser({ _id: '', email: '', name: '' });
+        setCards([]);
+        setSavedCards([]);
+        setMovieSearchText('');
+        setSavedMovieSearchText('');
+        setIsMovieSearchSlider(false);
+        setIsSavedMovieSearchSlider(false);
         navigate('/');
     }
 
@@ -126,6 +154,7 @@ function App() {
                 setCurrentUser(newUserData);
                 setUserUpdateError('');
                 console.log('Информация о пользователе обновлена:', { email: newUserData.email, name: newUserData.name });
+                handleOpenProfileTooltipClick();
             })
             .catch((err) => {
                 console.log(currentUser);
@@ -137,43 +166,29 @@ function App() {
     }
 
     // работа с фильмами
-    function handleCardFind(searchText, isShortFilter) {
+    function handleCardFind(searchText, isShortMovie) {
         setIsPreloader(true);
-        setIsFilterError(false);
-        setIsFilterNotFound(false);
-        moviesApi
-            .getMovies()
-            .then((movies) => {
-                if ((searchText === '') & isShortFilter) {
-                    setCards(filterMoviesByDuration(movies, isShortFilter));
-                } else if ((searchText === '') & !isShortFilter) {
-                    setSavedCards(movies);
-                } else {
-                    setCards(filterMovies(movies, searchText, isShortFilter));
-                }
-                localStorage.setItem('movies', JSON.stringify(cards));
-            })
-            .catch((err) => {
-                console.log(err);
-                setIsFilterError(true);
-            })
-            .finally(() => {
-                if (cards.length === 0) {
-                    setIsFilterNotFound(true);
-                }
-                setIsPreloader(false);
-            });
+        let newCardList = filterMovies(allCards, searchText, isShortMovie);
+        setCards(newCardList);
+        setMovieSearchText(searchText);
+        setIsMovieSearchSlider(isShortMovie);
+        localStorage.setItem('movies', JSON.stringify(newCardList));
+        localStorage.setItem('movieSearchText', searchText);
+        localStorage.setItem('isMovieSearchSlider', isShortMovie);
+        newCardList.length === 0 ? setIsMoviesNotFound(true) : setIsMoviesNotFound(false);
+        setIsPreloader(false);
     }
 
-    function handleSavedCardFind(searchText, isShortFilter) {
+    function handleSavedCardFind(searchText, isShortMovie) {
         setIsPreloader(true);
-        if ((searchText === '') & isShortFilter) {
-            setSavedCards(filterMoviesByDuration(allSavedCards, isShortFilter));
-        } else if ((searchText === '') & !isShortFilter) {
-            setSavedCards(allSavedCards);
-        } else {
-            setSavedCards(filterMovies(allSavedCards, searchText, isShortFilter));
-        }
+        let newCardList = filterMovies(allSavedCards, searchText, isShortMovie);
+        setSavedCards(newCardList);
+        setSavedMovieSearchText(searchText);
+        setIsSavedMovieSearchSlider(isShortMovie);
+        localStorage.setItem('savedMovies', JSON.stringify(newCardList));
+        localStorage.setItem('savedMovieSearchText', searchText);
+        localStorage.setItem('isSavedMovieSearchSlider', isShortMovie);
+        newCardList.length === 0 ? setIsSavedMoviesNotFound(true) : setIsSavedMoviesNotFound(false);
         setIsPreloader(false);
     }
 
@@ -212,12 +227,19 @@ function App() {
         setIsNavigationMenuOpen(false);
     }
 
-    function handleOpenTooltipClick() {
+    function handleOpenMovieTooltipClick() {
+        setTooltipInfoText(NOT_FOUND_FILM_TOOLTIP_TEXT);
+        setIsInfoTooltipOpen(true);
+    }
+
+    function handleOpenProfileTooltipClick() {
+        setTooltipInfoText(UPDATE_USER_TOOLTIP_TEXT);
         setIsInfoTooltipOpen(true);
     }
 
     function closeInfoTooltip() {
         setIsInfoTooltipOpen(false);
+        setTooltipInfoText('');
     }
 
     return (
@@ -249,10 +271,12 @@ function App() {
                                                 onSaveMovie={handleCardSave}
                                                 onDeleteMovie={handleCardDelete}
                                                 onFindMovie={handleCardFind}
-                                                onOpenTooltip={handleOpenTooltipClick}
+                                                onOpenTooltip={handleOpenMovieTooltipClick}
                                                 isPreloader={isPreloader}
                                                 isFilterError={isFilterError}
-                                                isFilterNotFound={isFilterNotFound}
+                                                isFilterNotFound={isMoviesNotFound}
+                                                searchText={movieSearchText}
+                                                isSearchSlider={isMovieSearchSlider}
                                             />
                                         }
                                     />
@@ -263,8 +287,12 @@ function App() {
                                                 cards={savedCards}
                                                 onDeleteMovie={handleCardDelete}
                                                 onFindMovie={handleSavedCardFind}
-                                                onOpenTooltip={handleOpenTooltipClick}
+                                                onOpenTooltip={handleOpenMovieTooltipClick}
                                                 isPreloader={isPreloader}
+                                                isFilterError={isFilterError}
+                                                isFilterNotFound={isSavedMoviesNotFound}
+                                                searchText={savedMovieSearchText}
+                                                isSearchSlider={isSavedMovieSearchSlider}
                                             />
                                         }
                                     />
@@ -275,7 +303,7 @@ function App() {
                     </Routes>
                 </div>
                 <Navigation isOpen={isNavigationMenuOpen} onClose={closeNavigation} />
-                <InfoTooltip isOpen={isInfoTooltipOpen} onClose={closeInfoTooltip} />
+                <InfoTooltip isOpen={isInfoTooltipOpen} onClose={closeInfoTooltip} tooltipInfoText={tooltipInfoText} />
             </div>
         </CurrentUserContext.Provider>
     );

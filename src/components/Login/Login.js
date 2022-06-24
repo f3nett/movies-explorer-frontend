@@ -7,7 +7,12 @@ function Login({ onLogin, serverError }) {
     const { values, handleChange, errors, isValid } = useFormValidation({
         defaultValues: { email: '', password: '' },
         defaultValid: false,
-        defaultValidations: '',
+        defaultValidations: {
+            email: {
+                pattern: /^[a-z0-9_.+-]+@[a-z0-9-]+\.[a-z0-9-.]+$/i,
+                errorMessage: 'Введите адрес электронной почты',
+            },
+        },
     });
 
     function handleSubmit(e) {

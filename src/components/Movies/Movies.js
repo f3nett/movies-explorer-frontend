@@ -14,7 +14,9 @@ function Movies({
     onOpenTooltip,
     isPreloader,
     isFilterError,
-    isFilterNotFound
+    isFilterNotFound,
+    searchText,
+    isSearchSlider,
 }) {
     const { windowSize } = useWindowSize();
     const isSavedCardStyle = false;
@@ -40,7 +42,13 @@ function Movies({
 
     return (
         <main className='movies'>
-            <SearchForm onFindMovie={onFindMovie} onOpenTooltip={onOpenTooltip} isBlockSearch={isPreloader}/>
+            <SearchForm
+                onFindMovie={onFindMovie}
+                onOpenTooltip={onOpenTooltip}
+                isLockForm={isPreloader}
+                searchText={searchText}
+                isSearchSlider={isSearchSlider}
+            />
             {isPreloader ? (
                 <Preloader />
             ) : isFilterNotFound ? (
