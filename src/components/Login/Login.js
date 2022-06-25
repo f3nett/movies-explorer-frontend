@@ -3,14 +3,21 @@ import { NavLink } from 'react-router-dom';
 import Logo from '../Logo/Logo';
 import useFormValidation from '../../hooks/useFormValidation';
 
-function Login() {
-    const { handleChange, errors, isValid } = useFormValidation({
+function Login({ onLogin, serverError }) {
+    const { values, handleChange, errors, isValid } = useFormValidation({
         defaultValues: { email: '', password: '' },
         defaultValid: false,
+        defaultValidations: {
+            email: {
+                pattern: /^[a-z0-9_.+-]+@[a-z0-9-]+\.[a-z0-9-.]+$/i,
+                errorMessage: 'Введите адрес электронной почты',
+            },
+        },
     });
 
     function handleSubmit(e) {
         e.preventDefault();
+        onLogin(values['email'], values['password']);
     }
 
     return (
@@ -51,7 +58,14 @@ function Login() {
                 </div>
             </form>
             <div className='signin__bottom'>
-                <button className={`signin__submit ${isValid ? '' : 'signin__submit_inactive'} button`} type='submit' onClick={handleSubmit}>
+                <span id='signin__error-server' className={`signin__error ${serverError === '' ? '' : 'signin__error_active'}`}>
+                    {serverError}
+                </span>
+                <button
+                    className={`signin__submit ${isValid ? '' : 'signin__submit_inactive'} button`}
+                    type='submit'
+                    onClick={handleSubmit}
+                    disabled={!isValid}>
                     Войти
                 </button>
                 <p className='signin__info'>

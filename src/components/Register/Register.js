@@ -3,14 +3,25 @@ import { NavLink } from 'react-router-dom';
 import Logo from '../Logo/Logo';
 import useFormValidation from '../../hooks/useFormValidation';
 
-function Register() {
-    const { handleChange, errors, isValid } = useFormValidation({
+function Register({ onRegister, serverError }) {
+    const { values, handleChange, errors, isValid } = useFormValidation({
         defaultValues: { name: '', email: '', password: '' },
         defaultValid: false,
+        defaultValidations: {
+            name: {
+                pattern: /^([a-zа-яё ]+)$/i,
+                errorMessage: 'Поле может содержать только буквы, дефис и пробел',
+            },
+            email: {
+                pattern: /^[a-z0-9_.+-]+@[a-z0-9-]+\.[a-z0-9-.]+$/i,
+                errorMessage: 'Введите адрес электронной почты',
+            },
+        },
     });
 
     function handleSubmit(e) {
         e.preventDefault();
+        onRegister(values['name'], values['email'], values['password']);
     }
 
     return (
@@ -67,9 +78,14 @@ function Register() {
                 </div>
             </form>
             <div className='signin__bottom'>
-                <button className={`signin__submit ${isValid ? '' : 'signin__submit_inactive'} button`} 
-                    type='submit' 
-                    onClick={handleSubmit}>
+                <span id='signin__error-server' className={`signin__error ${serverError === '' ? '' : 'signin__error_active'}`}>
+                    {serverError}
+                </span>
+                <button
+                    className={`signin__submit ${isValid ? '' : 'signin__submit_inactive'} button`}
+                    type='submit'
+                    onClick={handleSubmit}
+                    disabled={!isValid}>
                     Зарегистрироваться
                 </button>
                 <p className='signin__info'>

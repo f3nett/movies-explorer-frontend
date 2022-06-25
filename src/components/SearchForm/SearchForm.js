@@ -1,47 +1,57 @@
 import React from 'react';
 
-function SearchForm() {
-    const [seachedFilm, setSeachedFilm] = React.useState('');
-    const [isShortFilmFilter, setIsShortFilmFilter] = React.useState(true);
+function SearchForm({ onFindMovie, onOpenTooltip, isLockForm, searchText, isSearchSlider }) {
+    const [isCheckedSlider, setIsCheckedSlider] = React.useState(isSearchSlider);
+    const [searchedMovie, setSearchedMovie] = React.useState(searchText);
 
-    function handleChange(e) {
+    const handleSearchTextChange = (e) => {
         const { value } = e.target;
-        setSeachedFilm(value);
+        setSearchedMovie(value);
+    };
+
+    function handleSubmit(e) {
+        e.preventDefault();
+        if (searchedMovie === '') {
+            onOpenTooltip();
+        } else {
+            onFindMovie(searchedMovie, isCheckedSlider);
+        }
     }
 
     function toggleSwitch() {
-        if (isShortFilmFilter) {
-            setIsShortFilmFilter(false);
-        } else {
-            setIsShortFilmFilter(true);
-        }
+        onFindMovie(searchedMovie, !isCheckedSlider);
     }
 
     return (
         <section className='searchform'>
             <form className='searchform__content'>
-                <div className='seachform__input'>
+                <div className='searchform__input'>
                     <input
-                        className='seachform__input-box'
-                        id='input_seach'
+                        className='searchform__input-box'
+                        id='input_search'
                         type='text'
-                        name='film'
+                        name='searchText'
                         placeholder='Фильм'
                         required
-                        value={seachedFilm}
-                        onChange={handleChange}
+                        value={searchedMovie}
+                        onChange={handleSearchTextChange}
+                        readOnly={isLockForm}
                     />
-                    <button className='seachform__submit-button button' type='submit'>
+                    <button className='searchform__submit-button button' type='submit' disabled={isLockForm} onClick={handleSubmit}>
                         Найти
                     </button>
                 </div>
-                <div className='seachform__slider'>
-                    <button
-                        className={`seachform__switch ${isShortFilmFilter ? 'seachform__switch_active' : ''}`}
-                        type='button'
-                        onClick={toggleSwitch}></button>
-                    <p className='seachform__slider-text'>Короткометражки</p>
-                </div>
+                <label className='searchform__slider'>
+                    <input
+                        className='searchform__slider-input'
+                        type='checkbox'
+                        name='isSearchSlider'
+                        disabled={isLockForm}
+                        onChange={() => setIsCheckedSlider(!isCheckedSlider)}
+                        onClick={toggleSwitch}></input>
+                    <span className={`searchform__switch ${isCheckedSlider ? 'searchform__switch_active' : ''}`}></span>
+                    <p className='searchform__slider-text'>Короткометражки</p>
+                </label>
             </form>
         </section>
     );
